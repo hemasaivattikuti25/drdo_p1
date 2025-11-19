@@ -1,0 +1,48 @@
+{
+  "name": "favcart-backend",
+  "version": "1.0.0",
+  "description": "FAVcart Backend - Node.js API with MongoDB Replica Set Support",
+  "main": "server.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node server.js",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
+    "dev:standalone": "cross-env NODE_ENV=development MONGO_DEFAULT_MODE=standalone nodemon server.js",
+    "dev:replica": "cross-env NODE_ENV=development MONGO_DEFAULT_MODE=replica nodemon server.js",
+    "seed": "node utils/seeder.js",
+    "test:failover": "node utils/testFailover.js",
+    "health:monitor": "node utils/healthMonitor.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sai",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "helmet": "^6.1.5",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "systeminformation": "^5.25.11",
+    "validator": "^13.9.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.11"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "mongodb",
+    "replica-set",
+    "ecommerce",
+    "api"
+  ]
+}

@@ -1,0 +1,21 @@
+# Dependencies
+/node_modules
+/frontend/node_modules
+
+# Configuration file with secrets
+/backend/config/config.env
+
+# Uploaded media
+/backend/uploads/
+
+# Build folder (if you create one)
+/frontend/build
+
+# Log files
+*.log
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+.env
+.env.*
+.DS_Store
