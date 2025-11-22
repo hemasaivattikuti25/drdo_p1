@@ -1,61 +1,98 @@
-import React, { useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProduct } from '../slices/productSlice';
+import { useParams } from 'react-router-dom';
+import { getProduct } from '../actions/productActions';
+import Loader from './layouts/Loader';
 import MetaData from './layouts/MetaData';
+import { Carousel } from 'react-bootstrap';
 
 function ProductDetails() {
-  const { id } = useParams();
-  const dispatch = useDispatch();
-  const { loading, product, error } = useSelector(state => state.productState);
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const { loading, product = {}, error } = useSelector(state => state.productState);
+    const [quantity, setQuantity] = useState(1);
 
-  useEffect(() => {
-    dispatch(getProduct(id));
-  }, [dispatch, id]);
+    useEffect(() => {
+        dispatch(getProduct(id));
+    }, [dispatch, id]);
 
-  if (loading) return <div className="loading">Loading product details...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
+    const increaseQty = () => {
+        const count = document.querySelector('.count');
+        if (product.stock === 0 || count.valueAsNumber >= product.stock) return;
+        const qty = count.valueAsNumber + 1;
+        setQuantity(qty);
+    }
 
-  return (
-    <div className="product-details">
-      <MetaData title={product.name || 'Product Details'} />
-      <Link to="/" className="back-link">← Back to Products</Link>
-      
-      {product.name ? (
-        <div className="product-details-content">
-          <div className="product-image-section">
-            <img 
-              src={product.image || '/images/default-product.jpg'} 
-              alt={product.name}
-              className="product-detail-image"
-            />
-          </div>
-          
-          <div className="product-info-section">
-            <h1>{product.name}</h1>
-            <p className="price">${product.price}</p>
-            <p className="description">{product.description}</p>
-            <div className="product-meta">
-              <p><strong>Category:</strong> {product.category}</p>
-              <p><strong>Stock:</strong> {product.stock}</p>
-              <p><strong>Product ID:</strong> {product._id}</p>
-            </div>
-            
-            <div className="action-buttons">
-              <button 
-                className="add-to-cart-btn"
-                disabled={product.stock === 0}
-              >
-                {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="no-product">Product not found</div>
-      )}
-    </div>
-  );
+    const decreaseQty = () => {
+        const count = document.querySelector('.count');
+        if (count.valueAsNumber <= 1) return;
+        const qty = count.valueAsNumber - 1;
+        setQuantity(qty);
+    }
+
+    return (
+        <Fragment>
+            {loading ? <Loader /> : (
+                <Fragment>
+                    <MetaData title={product.name} />
+                    <div className="row f-flex justify-content-around">
+                        <div className="col-12 col-lg-5 img-fluid" id="product_image">
+                            <Carousel pause="hover">
+                                {product.images && product.images.map(image => (
+                                    <Carousel.Item key={image._id}>
+                                        <img className="d-block w-100" src={image.image} alt={product.name} height="500" width="500" />
+                                    </Carousel.Item>
+                                ))}
+                            </Carousel>
+                        </div>
+
+                        <div className="col-12 col-lg-5 mt-5">
+                            <h3>{product.name}</h3>
+                            <p id="product_id">Product # {product._id}</p>
+
+                            <hr />
+
+                            <div className="rating-outer">
+                                <div className="rating-inner" style={{ width: `${(product.ratings / 5) * 100}%` }}></div>
+                            </div>
+                            <span id="no_of_reviews">({product.numOfReviews} Reviews)</span>
+
+                            <hr />
+
+                            <p id="product_price">${product.price}</p>
+                            <div className="stockCounter d-inline">
+                                <span className="btn btn-danger minus" onClick={decreaseQty}>-</span>
+                                <input type="number" className="form-control count d-inline" value={quantity} readOnly />
+                                <span className="btn btn-primary plus" onClick={increaseQty}>+</span>
+                            </div>
+                            <button type="button" id="cart_btn" className="btn btn-primary d-inline ml-4" disabled={product.stock === 0}>Add to Cart</button>
+
+                            <hr />
+
+                            <p>Status: <span id="stock_status" className={product.stock > 0 ? 'greenColor' : 'redColor'}>{product.stock > 0 ? 'In Stock' : 'Out of Stock'}</span></p>
+
+                            <hr />
+
+                            <h4 className="mt-2">Description:</h4>
+                            <p>{product.description}</p>
+                            <hr />
+                            <p id="product_seller mb-3">Sold by: <strong>{product.seller}</strong></p>
+
+                            <button id="review_btn" type="button" className="btn btn-primary mt-4" data-toggle="modal" data-target="#ratingModal">
+                                Submit Your Review
+                            </button>
+
+                            <div className="row mt-2 mb-5">
+                                <div className="rating w-50">
+                                    {/* Modal for review would go here */}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Fragment>
+            )}
+        </Fragment>
+    );
 }
 
 export default ProductDetails;

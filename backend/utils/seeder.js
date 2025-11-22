@@ -1,51 +1,18 @@
 const mongoose = require('mongoose');
-const Product = require('../models/Product');
+const Product = require('../models/productModel');
 const path = require('path');
+const products = require('../data/products.json');
 require('dotenv').config({ path: path.join(__dirname, '../config/config.env') });
-
-const sampleProducts = [
-  {
-    name: 'Laptop Pro',
-    price: 1299.99,
-    description: 'High-performance laptop for professionals and creatives.',
-    category: 'Electronics',
-    stock: 15,
-    image: '/images/laptop.jpg'
-  },
-  {
-    name: 'Smartphone X',
-    price: 799.99,
-    description: 'Latest generation smartphone with a stunning display and powerful camera.',
-    category: 'Electronics', 
-    stock: 25,
-    image: '/images/smartphone.jpg'
-  },
-  {
-    name: 'Classic Cotton T-Shirt',
-    price: 24.99,
-    description: 'A comfortable and stylish 100% cotton t-shirt.',
-    category: 'Clothing',
-    stock: 50,
-    image: '/images/tshirt.jpg'
-  },
-  {
-    name: 'Running Shoes',
-    price: 89.99,
-    description: 'Lightweight and durable running shoes for all terrains.',
-    category: 'Sports',
-    stock: 30,
-    image: '/images/shoes.jpg'
-  }
-];
 
 async function seedDatabase() {
   try {
     console.log('🌱 Starting database seed...');
     
-    const dbUri = process.env.MONGO_URI_STANDALONE;
+    const mode = process.env.MONGO_DEFAULT_MODE || 'standalone';
+    const dbUri = mode === 'replica' ? process.env.MONGO_URI_REPLICA : process.env.MONGO_URI_STANDALONE;
 
     if (!dbUri) {
-      throw new Error('MONGO_URI_STANDALONE is not defined in backend/config/config.env');
+      throw new Error(`MONGO_URI_${mode.toUpperCase()} is not defined in backend/config/config.env`);
     }
 
     console.log(`🔗 Connecting to database: ${dbUri}`);
@@ -59,7 +26,7 @@ async function seedDatabase() {
     await Product.deleteMany({});
     
     console.log('📦 Inserting sample products...');
-    const insertedProducts = await Product.insertMany(sampleProducts);
+    const insertedProducts = await Product.insertMany(products);
     
     console.log(`✅ Successfully seeded ${insertedProducts.length} products!`);
     
@@ -82,4 +49,4 @@ if (require.main === module) {
   seedDatabase();
 }
 
-module.exports = { sampleProducts, seedDatabase };
+module.exports = { seedDatabase };

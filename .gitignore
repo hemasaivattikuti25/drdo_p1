@@ -19,3 +19,14 @@ frontend/node_modules/
 .env
 .env.*
 .DS_Store
+
+# Database data directories
+data-db/
+mongodb_data/
+
+# Backend build artifacts
+backend/build/
+
+# OS generated files
+.DS_Store
+Thumbs.db

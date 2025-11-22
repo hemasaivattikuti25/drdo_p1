@@ -65,7 +65,7 @@ userSchema.methods.getResetToken = function(){
 
     return token
 }
-let model =  mongoose.model('User', userSchema);
+let model =  mongoose.models.User || mongoose.model('User', userSchema);
 
 
 module.exports = model;

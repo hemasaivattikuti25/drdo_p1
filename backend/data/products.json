@@ -6,7 +6,7 @@
     "ratings": 4.5,
     "images": [
       {
-        "image": "/images/products/1.jpg"
+        "image": "/uploads/products/1.jpg"
       }
     ],
     "category": "Mobile Phones",
@@ -22,7 +22,7 @@
     "ratings": 3.5,
     "images": [
       {
-        "image": "/images/products/2.jpg"
+        "image": "/uploads/products/2.jpg"
       }
     ],
     "category": "Accessories",
@@ -38,7 +38,7 @@
     "ratings": 2,
     "images": [
       {
-        "image": "/images/products/3.jpg"
+        "image": "/uploads/products/3.jpg"
       }
     ],
     "category": "Laptops",
@@ -54,7 +54,7 @@
     "ratings": 4,
     "images": [
       {
-        "image": "/images/products/6.jpg"
+        "image": "/uploads/products/6.jpg"
       }
     ],
     "category": "Laptops",
@@ -70,7 +70,7 @@
     "ratings": 5,
     "images": [
       {
-        "image": "/images/products/7.jpg"
+        "image": "/uploads/products/7.jpg"
       }
     ],
     "category": "Laptops",
@@ -86,7 +86,7 @@
     "ratings": 5,
     "images": [
       {
-        "image": "/images/products/4.jpg"
+        "image": "/uploads/products/4.jpg"
       }
     ],
     "category": "Headphones",
@@ -102,7 +102,7 @@
     "ratings": 3,
     "images": [
       {
-        "image": "/images/products/5.jpg"
+        "image": "/uploads/products/5.jpg"
       }
     ],
     "category": "Sports",
@@ -118,7 +118,7 @@
     "ratings": 4.8,
     "images": [
       {
-        "image": "/images/products/8.jpg"
+        "image": "/uploads/products/8.jpg"
       }
     ],
     "category": "Electronics",
@@ -134,7 +134,7 @@
     "ratings": 4.9,
     "images": [
       {
-        "image": "/images/products/9.jpg"
+        "image": "/uploads/products/9.jpg"
       }
     ],
     "category": "Books",
@@ -150,7 +150,7 @@
     "ratings": 4.6,
     "images": [
       {
-        "image": "/images/products/10.jpg"
+        "image": "/uploads/products/10.jpg"
       }
     ],
     "category": "Clothes/Shoes",
@@ -166,7 +166,7 @@
     "ratings": 4.2,
     "images": [
       {
-        "image": "/images/products/11.jpg"
+        "image": "/uploads/products/11.jpg"
       }
     ],
     "category": "Outdoor",
@@ -182,7 +182,7 @@
     "ratings": 4.5,
     "images": [
       {
-        "image": "/images/products/12.jpg"
+        "image": "/uploads/products/12.jpg"
       }
     ],
     "category": "Home",

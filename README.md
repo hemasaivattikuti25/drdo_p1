@@ -25,9 +25,11 @@ Designed, built, and documented end-to-end by Hemasai Vattikuti (`@hemasaivattik
 | Database Layer | Authored `backend/config/database.js`, `backend/models/*.js`, replica-aware services, and `scripts/setup-replica.sh` for one-command LAN bootstrap. |
 | Backend Services | Added Express server, admin failover APIs, health monitors, seeder + failover testers, and granular route separation (`routes/admin.js`, `routes/products.js`). |
 | Frontend | Built React SPA with Redux Toolkit slices, admin dashboards, replica status widgets, database controls, product browsing, and theming. |
-| Deployment & Docs | Produced full documentation suite (`DEPLOYMENT.md`, `MACOS_SETUP.md`, `WINDOWS_SETUP.md`, `SYSTEM_STATUS.md`, `REQUIREMENTS_CHECK.md`, `CHANGES_MADE.md`) so anyone can reproduce the build. |
+| Deployment & Docs | Produced full documentation suite so anyone can reproduce the build. |
 
-Everything in the repo was implemented manually—no boilerplate generators, no cloned templates. This README consolidates the instructions spread across the supporting docs so GitHub visitors can follow a single source of truth.
+Everything in the repo was implemented manually—no boilerplate generators, no cloned templates. This README consolidates the instructions so GitHub visitors can follow a single source of truth.
+
+> **📘 Comprehensive Guide**: For a detailed, step-by-step operational manual including daily procedures, failover testing, and troubleshooting, please refer to [GUIDE.md](GUIDE.md).
 
 ---
 
@@ -48,51 +50,50 @@ Everything in the repo was implemented manually—no boilerplate generators, no 
 - Two machines/laptops for replica set (or VMs)
 - Port 27017 open on both machines
 
-## Quick Start (Clean Machine)
+## Quick Start (Local Demo)
 
-### 1. Clone and Install Dependencies
+The easiest way to run the project is using the automated scripts for a local 3-node replica set.
 
+### 1. Start the Database
+Initialize the 3-node replica set automatically on your local machine:
 ```bash
-git clone https://github.com/hemasaivattikuti25/FAVcart.git
-cd FAVcart
-npm install
-cd frontend && npm install && cd ..
+./scripts/start-local-replica.sh
 ```
+*This starts MongoDB instances on ports 27017, 27018, and 27019.*
 
-### 2. Environment Setup
+### 2. Run the Application
 
+**Option A: Production / Offline Mode (Recommended)**
+This runs the full application (Frontend + Backend) on port 8000 without external dependencies.
 ```bash
-cp backend/config/config.env.example backend/config/config.env
+./scripts/start-offline.sh
 ```
+*Access at: http://localhost:8000*
 
-Edit `backend/config/config.env`:
-```env
-# Replace the placeholder IPs with your LAN addresses
-MONGO_URI_STANDALONE=mongodb://127.0.0.1:27017/jvlcart
-MONGO_URI_REPLICA=mongodb://172.16.1.100:27017,192.168.1.200:27017/jvlcart?replicaSet=rs0&readPreference=primaryPreferred
-MONGO_URI_SECONDARY=mongodb://192.168.1.200:27017/jvlcart
-MONGO_DEFAULT_MODE=standalone
-
-NODE_ENV=development
-PORT=8000
-```
-
-> **Tip:** Run `./scripts/setup-replica.sh <primary-ip> <secondary-ip>` to auto-populate the replica URI and switch `MONGO_DEFAULT_MODE` to `replica`.
-
-### 3. Firewall Configuration (Both Machines)
-
-**On both machines, open port 27017:**
-
-**Linux/Ubuntu:**
+**Option B: Development Mode**
+Run backend and frontend separately.
 ```bash
-sudo ufw allow 27017
-sudo ufw reload
+# Terminal 1 (Backend)
+cd backend
+npm run dev:replica
+
+# Terminal 2 (Frontend)
+cd frontend
+npm start
 ```
 
-**Windows:**
-```cmd
-netsh advfirewall firewall add rule name="MongoDB" dir=in action=allow protocol=TCP localport=27017
-```
+## Multi-Machine Setup (Advanced)
+
+To set up the replica set across two different machines (e.g., for a failover demo between laptops):
+
+1.  **Clone and Install** on both machines.
+2.  **Configure IPs**: Run the setup script with the IPs of both machines.
+    ```bash
+    cd scripts
+    ./setup-replica.sh <PRIMARY_IP> <SECONDARY_IP>
+    ```
+3.  **Firewall**: Ensure port 27017 is open on both machines.
+
 
 ## Offline LAN Setup (when internet is forbidden)
 
@@ -105,7 +106,7 @@ netsh advfirewall firewall add rule name="MongoDB" dir=in action=allow protocol=
 
 #### Setup:
 - Set `MONGO_DEFAULT_MODE=standalone` in `backend/config/config.env`
-- Ensure `MONGO_URI_STANDALONE` points to `mongodb://127.0.0.1:27017/jvlcart`
+- Ensure `MONGO_URI_STANDALONE` points to `mongodb://127.0.0.1:27017/favcart`
 ```bash
 # Start MongoDB standalone
 mongod --dbpath C:\data\db --port 27017
@@ -121,7 +122,7 @@ node backend/utils/seeder.js
 
 #### Verify:
 - Application: http://localhost:3000
-- Database: `mongo jvlcart` then `db.products.find()`
+- Database: `mongo favcart` then `db.products.find()`
 
 ---
 

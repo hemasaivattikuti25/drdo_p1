@@ -12,7 +12,12 @@
     "build": "cd frontend && npm run build",
     "install-all": "npm install && cd frontend && npm install"
   },
-  "keywords": ["ecommerce", "mongodb", "replica-set", "mern"],
+  "keywords": [
+    "ecommerce",
+    "mongodb",
+    "replica-set",
+    "mern"
+  ],
   "author": "Sai",
   "license": "MIT",
   "dependencies": {
@@ -27,6 +32,7 @@
     "mongoose": "^7.0.3",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^7.0.10",
     "validator": "^13.9.0"
   },
   "devDependencies": {

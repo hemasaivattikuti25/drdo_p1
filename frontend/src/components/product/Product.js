@@ -1,25 +1,39 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-function Product({ product }) {
+export default function Product({ product, col }) {
   return (
-    <div className="product-card">
-      <Link to={`/product/${product._id}`}>
-        <img 
-          src={product.image || '/images/default-product.jpg'} 
-          alt={product.name}
-          className="product-image"
-        />
-        <div className="product-info">
-          <h3>{product.name}</h3>
-          <p className="price">${product.price}</p>
-          <p className="description">{product.description}</p>
-          <p className="stock">Stock: {product.stock}</p>
-          <p className="category">Category: {product.category}</p>
+    <div className={`col-sm-12 col-md-6 col-lg-${col} my-3`}>
+      <div className="card p-3 rounded">
+        {product.images.length > 0 && (
+          <img
+            className="card-img-top mx-auto"
+            src={product.images[0].image}
+            alt={product.name}
+          />
+        )}
+        <div className="card-body d-flex flex-column">
+          <h5 className="card-title">
+            <Link to={`/product/${product._id}`}>{product.name}</Link>
+          </h5>
+          <div className="ratings mt-auto">
+            <div className="rating-outer">
+              <div
+                className="rating-inner"
+                style={{ width: `${(product.ratings / 5) * 100}%` }}
+              ></div>
+            </div>
+            <span id="no_of_reviews">({product.numOfReviews} Reviews)</span>
+          </div>
+          <p className="card-text">₹{product.price}</p>
+          <Link
+            to={`/product/${product._id}`}
+            id="view_btn"
+            className="btn btn-block"
+          >
+            View Details
+          </Link>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }
-
-export default Product;
