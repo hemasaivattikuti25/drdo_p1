@@ -1,11 +1,8 @@
-# FAVcart - MongoDB Replica Set E-commerce Application
+# FAVcart v2.0 - High-Performance E-commerce with Hot Redundancy
 
-Designed, built, and documented end-to-end by Hemasai Vattikuti (`@hemasaivattikuti25`) to demonstrate a production-grade MERN stack that can keep selling even when the primary database fails.  
+**FAVcart v2.0** is a production-grade e-commerce platform engineered for high availability and performance. This version represents a major architectural upgrade, migrating the backend to **Python (FastAPI)** while retaining the robust **React** frontend and **MongoDB** "Hot Redundancy" database architecture.
 
-- GitHub profile: [hemasaivattikuti25](https://github.com/hemasaivattikuti25)
-- Ownership: Entire architecture (backend, frontend, infra scripts, docs) created from scratch, including replica-set automation, health monitoring services, and deployment collateral.
-
-> **Why this repo exists**: To showcase a full offline-capable commerce platform with high availability, produced individually without starter templates. Every folder here—including `scripts/`, `backend/services/`, `frontend/src/slices/`, and comprehensive deployment manuals—was authored by Hemasai, iterated through multiple dry-runs, and validated on macOS + Windows.
+Designed and built by **Hemasai Vattikuti** (`@hemasaivattikuti25`).
 
 ---
 
