@@ -44,7 +44,7 @@ export  default function NewProduct () {
             const reader = new FileReader();
 
             reader.onload = () => {
-                if(reader.readyState == 2 ) {
+                if(reader.readyState === 2 ) {
                     setImagesPreview(oldArray => [...oldArray, reader.result])
                     setImages(oldArray => [...oldArray, file])
                 }
@@ -91,7 +91,7 @@ export  default function NewProduct () {
             })
             return
         }
-    }, [isProductCreated, error, dispatch])
+    }, [isProductCreated, error, dispatch, navigate])
 
 
     return (
@@ -192,7 +192,7 @@ export  default function NewProduct () {
                                             className="mt-3 mr-2"
                                             key={image}
                                             src={image}
-                                            alt={`Image Preview`}
+                                            alt="Preview"
                                             width="55"
                                             height="52"
                                         />

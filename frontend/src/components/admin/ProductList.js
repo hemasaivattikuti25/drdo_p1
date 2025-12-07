@@ -107,7 +107,7 @@ export default function ProductList() {
     }
 
     dispatch(getAdminProducts);
-  }, [dispatch, error, isProductDeleted]);
+  }, [dispatch, error, isProductDeleted, productError]);
 
   return (
     <div className="row">

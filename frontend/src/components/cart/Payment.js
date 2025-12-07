@@ -120,7 +120,7 @@ export default function Payment() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
-  const { user } = useSelector((state) => state.authState);
+  // const { user } = useSelector((state) => state.authState);
   const { items: cartItems, shippingInfo } = useSelector(
     (state) => state.cartState
   );

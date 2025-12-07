@@ -33,7 +33,7 @@ export default function ConfirmOrder() {
 
   useEffect(() => {
     validateShipping(shippingInfo, navigate);
-  }, []);
+  }, [shippingInfo, navigate]);
 
   return (
     <Fragment>

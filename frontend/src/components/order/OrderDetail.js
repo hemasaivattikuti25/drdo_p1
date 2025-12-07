@@ -20,7 +20,7 @@ export default function OrderDetail() {
 
   useEffect(() => {
     dispatch(orderDetailAction(id));
-  }, [id]);
+  }, [id, dispatch]);
 
   return (
     <Fragment>
