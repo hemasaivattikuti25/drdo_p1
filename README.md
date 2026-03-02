@@ -5,7 +5,8 @@
 
 **My contribution:** Designed and implemented the **FastAPI backend** and the **MongoDB distributed replica set** infrastructure. The frontend and database content are minimal placeholders — the actual technical work is in the backend architecture and distributed database setup.
 
-> 📜 **Internship Certificate:** [certificates/HemSai.pdf](certificates/HemSai.pdf)
+> 📜 **Internship Certificate:** [certificates/HemSai.pdf](certificates/HemSai.pdf)  
+> 📖 **About This Project:** [ABOUT.md](ABOUT.md)
 
 ---
 
