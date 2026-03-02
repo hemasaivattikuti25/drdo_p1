@@ -5,8 +5,6 @@
 
 **My contribution:** Designed and implemented the **FastAPI backend** and the **MongoDB distributed replica set** infrastructure. The frontend and database content are minimal placeholders — the actual technical work is in the backend architecture and distributed database setup.
 
-> 📜 **Internship Certificate:** [certificates/HemSai.pdf](certificates/HemSai.pdf)
-
 ---
 
 ## 🧠 What I Built
@@ -158,6 +156,36 @@ The **actual technical contribution** of this internship project is:
 
 ---
 
-*Built at DRDL Hyderabad, 2025 · Hemasai Vattikuti · v3.0*
+---
 
-📖 [About This Project](ABOUT.md)
+## 👤 About the Developer
+
+**Hemasai Vattikuti**  
+Intern at DRDL, DRDO — Hyderabad  
+GitHub: [hemasaivattikuti25](https://github.com/hemasaivattikuti25)
+
+### Technical Highlights
+- **Zero-downtime failover:** If the Primary database crashes, a Secondary is promoted in ~10 seconds — no manual intervention, no data loss
+- **Dual-mode database:** Graceful degradation from replica set to standalone if the full cluster is unavailable
+- **Rate limiting:** 100 requests/minute per IP via `slowapi`
+- **Async everywhere:** Motor (async MongoDB driver) + FastAPI — no blocking I/O in the entire stack
+- **In-memory TTL caching:** Heavy aggregation routes are cached for 60 seconds
+
+### My Contribution
+| Area | What I Built |
+|------|-------------|
+| **FastAPI Backend** | Async REST API with rate limiting, JWT auth, Pydantic validation, advanced MongoDB aggregation pipelines |
+| **MongoDB Replica Set** | 3-node distributed database with automatic election, hot failover, and oplog-based replication |
+| **Docker Orchestration** | docker-compose.yml managing 5 containers (3 DB nodes + backend + frontend) |
+| **Health Monitoring** | Background task that detects failures and auto-switches between replica and standalone modes |
+| **Analytics Engine** | Inventory analysis, requisition trends, top equipment, and live DB metrics using aggregation pipelines |
+| **Database Seeder** | 30 realistic DRDO defence equipment entries across 10 categories |
+
+### Note on Data & Frontend
+The frontend is a minimal placeholder providing a visual wrapper for the system. The database content is simulated DRDO equipment data for demonstration purposes only. Real defence data is classified and was never included. The actual technical value of this project lies entirely in the backend architecture, the distributed database infrastructure, and the automated failover and health monitoring logic.
+
+---
+
+📜 **Internship Certificate:** [certificates/HemSai.pdf](certificates/HemSai.pdf)
+
+*Built at DRDL Hyderabad, 2025 · Hemasai Vattikuti · v3.0*
