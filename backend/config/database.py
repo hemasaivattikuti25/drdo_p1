@@ -21,10 +21,10 @@ class DatabaseManager:
         
         # Select URI based on mode
         if mode == "replica":
-            uri = os.getenv("MONGO_URI_REPLICA", "mongodb://localhost:27017,localhost:27018,localhost:27019/favcart?replicaSet=rs0")
+            uri = os.getenv("MONGO_URI_REPLICA", "mongodb://localhost:27017,localhost:27018,localhost:27019/drdo_dams?replicaSet=rs0")
             self.logger.info("Connecting to Replica Set...")
         else:
-            uri = os.getenv("MONGO_URI_STANDALONE", "mongodb://localhost:27017/favcart")
+            uri = os.getenv("MONGO_URI_STANDALONE", "mongodb://localhost:27017/drdo_dams")
             self.logger.info("Connecting to Standalone Backup...")
 
         try:

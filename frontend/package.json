@@ -1,7 +1,7 @@
 {
-  "name": "favcart-frontend",
-  "version": "0.1.0",
-  "description": "FAVcart Frontend - React Application",
+  "name": "drdo-dams-frontend",
+  "version": "2.0.0",
+  "description": "DRDO DAMS — Defence Asset Management System (Frontend)",
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
@@ -52,5 +52,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8000"
+  "proxy": "http://localhost:8001"
 }

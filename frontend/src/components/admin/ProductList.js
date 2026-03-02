@@ -24,22 +24,22 @@ export default function ProductList() {
     const data = {
       columns: [
         {
-          label: "ID",
+          label: "Asset ID",
           field: "id",
           sort: "asc",
         },
         {
-          label: "Name",
+          label: "Equipment Name",
           field: "name",
           sort: "asc",
         },
         {
-          label: "Price",
+          label: "Unit Cost (₹)",
           field: "price",
           sort: "asc",
         },
         {
-          label: "Stock",
+          label: "Availability",
           field: "stock",
           sort: "asc",
         },
@@ -98,7 +98,7 @@ export default function ProductList() {
       return;
     }
     if (isProductDeleted) {
-      toast("Product Deleted Succesfully!", {
+      toast("Equipment removed from registry.", {
         type: "success",
         position: toast.POSITION.BOTTOM_CENTER,
         onOpen: () => dispatch(clearProductDeleted()),
@@ -115,7 +115,7 @@ export default function ProductList() {
         <Sidebar />
       </div>
       <div className="col-12 col-md-10">
-        <h1 className="my-4">Product List</h1>
+        <h1 className="my-4" style={{ fontFamily: 'Rajdhani, sans-serif', color: '#c9a84c', borderLeft: '4px solid #c9a84c', paddingLeft: '0.8rem' }}>🛡️ Equipment Registry</h1>
         <Fragment>
           {loading ? (
             <Loader />

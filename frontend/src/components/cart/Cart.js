@@ -30,11 +30,11 @@ export default function Cart() {
   return (
     <Fragment>
       {items.length === 0 ? (
-        <h2 className="mt-5">Your Cart is Empty</h2>
+        <h2 className="mt-5">📋 No Pending Asset Requests</h2>
       ) : (
         <Fragment>
           <h2 className="mt-5">
-            Your Cart: <b>{items.length} items</b>
+            🗂️ Asset Request Form — <b>{items.length} item{items.length !== 1 ? 's' : ''}</b>
           </h2>
           <div className="row d-flex justify-content-between">
             <div className="col-12 col-lg-8">
@@ -103,7 +103,7 @@ export default function Cart() {
 
             <div className="col-12 col-lg-3 my-4">
               <div id="order_summary">
-                <h4>Order Summary</h4>
+                <h4>📋 Requisition Summary</h4>
                 <hr />
                 <p>
                   Subtotal:{" "}
@@ -129,7 +129,7 @@ export default function Cart() {
                   onClick={checkoutHandler}
                   className="btn btn-primary btn-block"
                 >
-                  Check out
+                  ✅ Submit Requisition
                 </button>
               </div>
             </div>

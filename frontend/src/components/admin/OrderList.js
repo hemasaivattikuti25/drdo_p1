@@ -26,17 +26,17 @@ export default function OrderList() {
     const data = {
       columns: [
         {
-          label: "ID",
+          label: "Requisition ID",
           field: "id",
           sort: "asc",
         },
         {
-          label: "Number of Items",
+          label: "Items",
           field: "noOfItems",
           sort: "asc",
         },
         {
-          label: "Amount",
+          label: "Total (₹)",
           field: "amount",
           sort: "asc",
         },
@@ -105,7 +105,7 @@ export default function OrderList() {
       return;
     }
     if (isOrderDeleted) {
-      toast("Order Deleted Succesfully!", {
+      toast("Requisition removed.", {
         type: "success",
         position: toast.POSITION.BOTTOM_CENTER,
         onOpen: () => dispatch(clearOrderDeleted()),
@@ -122,7 +122,7 @@ export default function OrderList() {
         <Sidebar />
       </div>
       <div className="col-12 col-md-10">
-        <h1 className="my-4">Order List</h1>
+        <h1 className="my-4" style={{ fontFamily: 'Rajdhani, sans-serif', color: '#c9a84c', borderLeft: '4px solid #c9a84c', paddingLeft: '0.8rem' }}>📋 Requisition Management</h1>
         <Fragment>
           {loading ? (
             <Loader />
