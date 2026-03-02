@@ -27,7 +27,7 @@ async def process_payment(
     }
 
 
-@router.get("/stripeapi")
+@router.get("/payment/config")
 async def get_payment_config(current_user: dict = Depends(get_current_user)):
-    """Return a placeholder key for the frontend payment step."""
-    return {"stripeApiKey": "internal_approval_mode"}
+    """Return approval mode configuration."""
+    return {"approvalMode": "internal", "status": "active"}
