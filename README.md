@@ -5,8 +5,7 @@
 
 **My contribution:** Designed and implemented the **FastAPI backend** and the **MongoDB distributed replica set** infrastructure. The frontend and database content are minimal placeholders — the actual technical work is in the backend architecture and distributed database setup.
 
-> 📜 **Internship Certificate:** [certificates/HemSai.pdf](certificates/HemSai.pdf)  
-> 📖 **About This Project:** [ABOUT.md](ABOUT.md)
+> 📜 **Internship Certificate:** [certificates/HemSai.pdf](certificates/HemSai.pdf)
 
 ---
 
@@ -160,3 +159,5 @@ The **actual technical contribution** of this internship project is:
 ---
 
 *Built at DRDL Hyderabad, 2025 · Hemasai Vattikuti · v3.0*
+
+📖 [About This Project](ABOUT.md)
