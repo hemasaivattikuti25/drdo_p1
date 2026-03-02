@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Request
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -14,10 +15,21 @@ from routers import product, auth, order, payment, admin, analytics
 # ── Rate Limiter ──────────────────────────────────────────────────────────────
 limiter = Limiter(key_func=get_remote_address, default_limits=["100/minute"])
 
+
+# ── Lifespan ──────────────────────────────────────────────────────────────────
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup / shutdown hooks using the modern lifespan protocol."""
+    await db_manager.connect("replica")
+    asyncio.create_task(monitor_health())
+    yield
+    await db_manager.disconnect()
+
+
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(
     title="DRDO DAMS API",
-    version="2.0",
+    version="3.0",
     description=(
         "Defence Asset Management System — FastAPI backend with MongoDB "
         "Replica Set hot redundancy. Built at DRDL, Hyderabad (DRDO)."
@@ -26,6 +38,7 @@ app = FastAPI(
         "name": "Hemasai Vattikuti",
         "url": "https://github.com/hemasaivattikuti25",
     },
+    lifespan=lifespan,
 )
 
 # Attach rate limiter
@@ -47,23 +60,12 @@ if not os.path.exists("uploads"):
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 # ── Routers ───────────────────────────────────────────────────────────────────
-app.include_router(product.router, prefix="/api/v1")
-app.include_router(auth.router,    prefix="/api/v1")
-app.include_router(order.router,   prefix="/api/v1")
-app.include_router(payment.router, prefix="/api/v1")
-app.include_router(admin.router,     prefix="/api/v1")
-app.include_router(analytics.router, prefix="/api/v1")
-
-# ── Lifecycle ─────────────────────────────────────────────────────────────────
-@app.on_event("startup")
-async def startup_db_client():
-    await db_manager.connect("replica")
-    asyncio.create_task(monitor_health())
-
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    await db_manager.disconnect()
+app.include_router(product.router,    prefix="/api/v1")
+app.include_router(auth.router,       prefix="/api/v1")
+app.include_router(order.router,      prefix="/api/v1")
+app.include_router(payment.router,    prefix="/api/v1")
+app.include_router(admin.router,      prefix="/api/v1")
+app.include_router(analytics.router,  prefix="/api/v1")
 
 
 # ── Root ──────────────────────────────────────────────────────────────────────
@@ -71,7 +73,7 @@ async def shutdown_db_client():
 async def root():
     return {
         "message": "DRDO DAMS API is running",
-        "version": "2.0",
+        "version": "3.0",
         "docs": "/docs",
         "dbMode": db_manager.mode,
     }

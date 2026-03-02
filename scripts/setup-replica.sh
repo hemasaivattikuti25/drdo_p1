@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# FAVCart MongoDB Replica Set Setup Script
+# DRDO DAMS MongoDB Replica Set Setup Script
 
-echo "🚀 FAVCart MongoDB Replica Set Setup"
+echo "🚀 DRDO DAMS MongoDB Replica Set Setup"
 echo "======================================"
 
 # Check if IP addresses are provided

@@ -1,7 +1,7 @@
 {
-  "name": "favcart",
-  "version": "2.0.0",
-  "description": "E-commerce with FastAPI Backend and React Frontend",
+  "name": "drdo-dams",
+  "version": "3.0.0",
+  "description": "DRDO DAMS — Defence Asset Management System with FastAPI, MongoDB Replica Set & React",
   "scripts": {
     "server": "cd backend && uvicorn main:app --reload --port 8000",
     "client": "cd frontend && npm start",
@@ -10,12 +10,13 @@
     "install-frontend": "cd frontend && npm install"
   },
   "keywords": [
-    "ecommerce",
-    "mongodb",
+    "drdo",
+    "asset-management",
+    "mongodb-replica-set",
     "fastapi",
     "react"
   ],
-  "author": "Sai",
+  "author": "Hemasai Vattikuti",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^7.6.0"

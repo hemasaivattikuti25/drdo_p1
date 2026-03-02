@@ -1,6 +1,6 @@
-# FAVcart Frontend
+# DRDO DAMS Frontend
 
-This is the React.js frontend for the FAVcart e-commerce platform.
+This is the React.js frontend for the DRDO Defence Asset Management System.
 
 ## Quick Start
 
@@ -19,6 +19,6 @@ This is the React.js frontend for the FAVcart e-commerce platform.
 *   **Redux Toolkit**: For global state management (Cart, User, Products).
 *   **Bootstrap 5**: For responsive UI components.
 *   **Axios**: For API communication with the FastAPI backend.
-*   **Stripe.js**: For payment processing.
+*   **Internal Approval Flow**: For requisition processing.
 
 For full project documentation, please refer to the [Root README](../README.md).

@@ -1,30 +1,44 @@
+"""
+DRDO DAMS — Requisition / Order Model
+======================================
+Represents an equipment requisition within the asset management system.
+"""
+
 from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
 
+
 class OrderItem(BaseModel):
+    """A single line-item in a requisition."""
     name: str
     quantity: int
-    image: str
+    image: str = ""  # optional asset thumbnail
     price: float
-    product: str # Product ID
+    product: str  # Equipment / Product ID
+
 
 class ShippingInfo(BaseModel):
+    """Delivery destination for the requisitioned equipment."""
     address: str
     city: str
     phoneNo: str
     postalCode: str
-    country: str
+    country: str = "India"
     state: str
 
+
 class PaymentInfo(BaseModel):
+    """Internal approval reference."""
     id: str
     status: str
 
+
 class Order(BaseModel):
+    """A complete equipment requisition."""
     shippingInfo: ShippingInfo
     orderItems: List[OrderItem]
-    user: Optional[str] = None # User ID (Set by backend)
+    user: Optional[str] = None  # User ID (set by backend)
     paymentInfo: PaymentInfo
     paidAt: Optional[datetime] = None
     itemsPrice: float = 0.0

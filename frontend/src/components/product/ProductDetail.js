@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { createReview, getProduct } from "../../actions/productActions";
 import Loader from "../layouts/Loader";
-import { Carousel } from "react-bootstrap";
 import MetaData from "../layouts/MetaData";
 import { addCartItem } from "../../actions/cartActions";
 import {
@@ -14,6 +13,20 @@ import {
 import { Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import ProductReview from "./ProductReview";
+
+/* ── Category icon map ──────────────────────────────── */
+const CATEGORY_ICONS = {
+  "Missile Systems": "🚀",
+  "Radar & Surveillance": "📡",
+  "Electronic Warfare": "⚡",
+  "Naval Systems": "🚢",
+  "Communication Equipment": "📻",
+  "Combat Vehicles": "🛡️",
+  "Aeronautic Systems": "✈️",
+  "Cyber Security": "🔐",
+  "Unmanned Systems": "🤖",
+  "Night Vision & Optics": "🔭",
+};
 
 export default function ProductDetail() {
   const {
@@ -93,27 +106,27 @@ export default function ProductDetail() {
         <Fragment>
           <MetaData title={product.name} />
           <div className="row f-flex justify-content-around">
-            <div className="col-12 col-lg-5 img-fluid" id="product_image">
-              <Carousel pause="hover">
-                {product.images &&
-                  product.images.length > 0 &&
-                  product.images.map((image) => (
-                    <Carousel.Item key={image._id}>
-                      <img
-                        className="d-block w-100"
-                        src={image.image}
-                        alt={product.name}
-                        height="500"
-                        width="500"
-                      />
-                    </Carousel.Item>
-                  ))}
-              </Carousel>
+            <div className="col-12 col-lg-5 d-flex align-items-center justify-content-center" id="product_image">
+              <div
+                style={{
+                  fontSize: "8rem",
+                  background: "linear-gradient(135deg, #1a2a44, #0d1b2a)",
+                  borderRadius: "1rem",
+                  width: "100%",
+                  height: "400px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid #1e3a5f",
+                }}
+              >
+                {CATEGORY_ICONS[product.category] || "🔧"}
+              </div>
             </div>
 
             <div className="col-12 col-lg-5 mt-5">
               <h3>{product.name}</h3>
-              <p id="product_id">Product # {product._id}</p>
+              <p id="product_id" style={{ fontSize: '0.82rem', color: '#8ea0b4' }}>Asset ID: {product._id}</p>
 
               <hr />
 
@@ -123,7 +136,7 @@ export default function ProductDetail() {
                   style={{ width: `${(product.ratings / 5) * 100}%` }}
                 ></div>
               </div>
-              <span id="no_of_reviews">({product.numOfReviews} Reviews)</span>
+              <span id="no_of_reviews">({product.numOfReviews} Inspections)</span>
 
               <hr />
 
@@ -150,35 +163,35 @@ export default function ProductDetail() {
                 disabled={product.stock === 0 ? true : false}
                 onClick={() => {
                   dispatch(addCartItem(product._id, quantity));
-                  toast("Cart Item Added!", {
+                  toast("Asset added to requisition list!", {
                     type: "success",
                     position: toast.POSITION.BOTTOM_CENTER,
                   });
                 }}
                 className="btn btn-primary d-inline ml-4"
               >
-                Add to Cart
+                📋 Request Asset
               </button>
 
               <hr />
 
               <p>
-                Status:{" "}
+                Availability:{" "}
                 <span
                   className={product.stock > 0 ? "greenColor" : "redColor"}
                   id="stock_status"
                 >
-                  {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                  {product.stock > 0 ? `✅ Available (${product.stock} units)` : "❌ Not Available"}
                 </span>
               </p>
 
               <hr />
 
-              <h4 className="mt-2">Description:</h4>
-              <p>{product.description}</p>
+              <h4 className="mt-2">Technical Specifications:</h4>
+              <p style={{ lineHeight: '1.7', color: '#c5d0db' }}>{product.description}</p>
               <hr />
               <p id="product_seller mb-3">
-                Sold by: <strong>{product.seller}</strong>
+                🏭 Vendor / Supplier: <strong>{product.seller}</strong>
               </p>
               {user ? (
                 <button
@@ -189,12 +202,11 @@ export default function ProductDetail() {
                   data-toggle="modal"
                   data-target="#ratingModal"
                 >
-                  Submit Your Review
+                  🔍 Submit Inspection Report
                 </button>
               ) : (
                 <div className="alert alert-danger mt-5">
-                  {" "}
-                  Login to Post Review
+                  🔒 Login to submit an inspection report
                 </div>
               )}
 
@@ -202,7 +214,7 @@ export default function ProductDetail() {
                 <div className="rating w-50">
                   <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
-                      <Modal.Title>Submit Review</Modal.Title>
+                      <Modal.Title>🔍 Submit Inspection Report</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                       <ul className="stars">

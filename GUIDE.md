@@ -1,4 +1,4 @@
-# Complete Operational Guide - FAVCart Database Redundancy System
+# Complete Operational Guide — DRDO DAMS Database Redundancy System
 
 ## Table of Contents
 1. [Initial Setup (First Time)](#1-initial-setup-first-time)
@@ -94,7 +94,7 @@ mongod --dbpath /data/db --port 27017
 #### Step 2: Start Application
 Open a new terminal in the project folder:
 ```bash
-cd path/to/favcart
+cd drdo_p1
 npm run dev
 ```
 **Expected Output:**
@@ -156,7 +156,7 @@ Use this to populate the database after a clean restart.
 
 **Command:**
 ```bash
-node backend/utils/seeder.js
+cd backend && python3 seeder.py
 ```
 
 **Expected Output:**
@@ -165,8 +165,8 @@ node backend/utils/seeder.js
 🔗 Connecting to database...
 ✅ Database connected.
 🗑 Clearing existing products...
-📦 Inserting sample products...
-✅ Successfully seeded 4 products!
+📦 Inserting sample equipment...
+✅ Successfully seeded 30 equipment items!
 ```
 
 ---
@@ -369,7 +369,7 @@ The automatic health monitoring system includes a CPU temperature check to preve
 ### Offline Mode Capabilities
 The configuration is set up for offline mode.
 *   **Core Functionality (100% Offline Ready)**: Database and Application logic work perfectly on LAN.
-*   **Internet-Dependent Features**: Email Services (Mailtrap) and Payment Gateway (Stripe) will gracefully fail without internet, but the app will not crash.
+*   **Internet-Dependent Features**: Email Services (Mailtrap) and The app will not crash.
 
 ---
 
@@ -378,7 +378,7 @@ The configuration is set up for offline mode.
 The project has successfully met all assignment objectives. The system demonstrates a robust, fault-tolerant architecture suitable for high-availability requirements.
 
 **Summary of Implemented Features:**
-*   ✅ **Full MERN Stack Application**: A complete e-commerce platform (FavCart).
+*   ✅ **Defence Asset Management System**: Full-stack web application.
 *   ✅ **Flexible Database Modes**: Support for both Standalone and Replica Set configurations.
 *   ✅ **Distributed Architecture**: Successful two-laptop replica set support over LAN.
 *   ✅ **Hot Redundancy**: Real-time, automated data synchronization between nodes.

@@ -17,9 +17,9 @@ class User(BaseModel):
         populate_by_name = True
         json_schema_extra = {
             "example": {
-                "name": "John Doe",
-                "email": "john@example.com",
-                "password": "password123",
+                "name": "Scientist D, DRDL",
+                "email": "user@drdl.drdo.gov.in",
+                "password": "Secure@Pass123",
                 "role": "user"
             }
         }

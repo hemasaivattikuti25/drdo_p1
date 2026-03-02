@@ -1,6 +1,6 @@
-# FAVcart Backend
+# DRDO DAMS Backend
 
-This is the FastAPI (Python) backend for the FAVcart e-commerce platform.
+This is the FastAPI (Python) backend for the DRDO Defence Asset Management System.
 
 ## Quick Start
 

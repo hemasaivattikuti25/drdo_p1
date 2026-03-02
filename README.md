@@ -1,216 +1,105 @@
 # 🛡️ DRDO DAMS — Defence Asset Management System
 
-**Full-Stack Application with Distributed MongoDB Replica Set**
+> **Internship Project** · Defence Research & Development Laboratory (DRDL), Hyderabad  
+> Ministry of Defence, Government of India
 
-> Built at **Defence Research & Development Laboratory (DRDL), Hyderabad** — DRDO, Ministry of Defence, Govt. of India.
->
-> Internship Project · Aug–Nov 2025 · Supervised by **Shri. Srijan Tripathi, Scientist 'E'**
+**My contribution:** Designed and implemented the **FastAPI backend** and the **MongoDB distributed replica set** infrastructure. The frontend and database content are minimal placeholders — the actual technical work is in the backend architecture and distributed database setup.
 
----
-
-## ⚠️ Important — Demo / Academic Project Notice
-
-> **DUMMY / SEEDED DATABASE**: The database is pre-populated with **simulated DRDO equipment data** (12 lab
-> instruments seeded via `backend/seeder.py`). No real asset records, classified data, or sensitive information
-> is stored. All equipment entries, prices, and personnel details are fictional and created for demonstration purposes.
->
-> **PLACEHOLDER FRONTEND**: The React frontend is a **prototype UI** built to demonstrate the backend architecture.
-> It is not connected to any live government systems. Admin credentials and JWT secrets in this repo are for
-> local/demo use only and must be changed before any real deployment.
->
-> **MY PRIMARY CONTRIBUTION**: The **FastAPI backend**, the **MongoDB Replica Set architecture** (3-node hot
-> redundancy with automatic failover), and the **Docker Compose orchestration** are the core deliverables of
-> this internship. The frontend serves as a visual demonstration layer.
+> 📜 **Internship Certificate:** [certificates/HemSai.pdf](certificates/HemSai.pdf)
 
 ---
 
-## 👨‍💻 Developer
+## 🧠 What I Built
 
-**Hemasai Vattikuti** (`@hemasaivattikuti25`) — B.Tech CSE, VIT-AP
+### 1. FastAPI Backend (Python)
+- Built a production-grade **async REST API** using **FastAPI + Uvicorn**
+- All routes use **Pydantic v2 data validation** with field-level constraints
+- **Rate limiting** via `slowapi` (100 req/min per IP)
+- **JWT authentication** with `python-jose`, password hashing with `bcrypt`
+- **Motor** (async MongoDB driver) — no blocking I/O anywhere in the stack
+- **Background Tasks** — fire-and-forget audit logging on analytics endpoints
+- **In-memory TTL cache** on heavy aggregation routes (60s expiry)
+- Auto-generated **OpenAPI/Swagger docs** at `/docs`
 
-**Key Contributions:**
-- ✅ **FastAPI backend** — all routers: Auth, Equipment, Requisitions, Payments, Admin
-- ✅ **MongoDB Replica Set** — 3-node hot redundancy, automatic PRIMARY election
-- ✅ **Distributed DB Manager** (`config/database.py`) — mode-switching & automatic failover
-- ✅ **Health Monitor** (`utils/health_monitor.py`) — CPU temp monitoring, auto DB failover
-- ✅ **Docker Compose** — full stack orchestration (3×MongoDB + API + nginx/React)
-- ✅ **Seeder** (`seeder.py`) — dummy DRDO equipment data for demonstration
+#### Advanced Analytics Endpoints (showcase of aggregation skill)
+| Endpoint | What it does |
+|---|---|
+| `GET /api/v1/analytics/inventory-by-category` | MongoDB `$group` + `$project` aggregation pipeline, TTL-cached |
+| `GET /api/v1/analytics/requisition-trends` | Daily orders using `$dateToString` aggregation |
+| `GET /api/v1/analytics/top-equipment` | `$lookup` join of orders + products collection |
+| `GET /api/v1/analytics/db-metrics` | Live `serverStatus` — connections, memory, replica lag |
 
 ---
 
-## 📐 Architecture
+### 2. MongoDB Replica Set (3-Node Distributed Database)
+
+This is the core database contribution.
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│        React Frontend (prototype UI) + nginx                  │
-│                    http://localhost:3000                       │
-└───────────────────────┬──────────────────────────────────────┘
-                        │  /api/*  (nginx reverse proxy)
-┌───────────────────────▼──────────────────────────────────────┐
-│           FastAPI Backend (Python 3.11) ← PRIMARY WORK        │
-│           Uvicorn · Port 8000 · Rate-Limited (slowapi)        │
-│   Routers: /products  /auth  /orders  /payment  /admin        │
-│   Health Monitor: DB ping + CPU temp every 30s               │
-└──────┬──────────────────┬──────────────────┬─────────────────┘
-       │                  │                  │
-┌──────▼──────┐  ┌────────▼──────┐  ┌───────▼────────┐
-│  MongoDB    │  │  MongoDB      │  │  MongoDB       │
-│  Node 1     │  │  Node 2       │  │  Node 3        │
-│  PRIMARY ★  │  │  SECONDARY    │  │  SECONDARY     │
-│  :27017     │  │  :27018       │  │  :27019        │
-└─────────────┘  └───────────────┘  └────────────────┘
-         ╰─────────── Replica Set rs0 ─────────────╯
-              Automatic election · 2-of-3 quorum
+┌─────────────────────────────────────────────────────┐
+│           MongoDB Replica Set (rs0)                 │
+│                                                     │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐        │
+│  │  mongo1  │◄──│  mongo2  │   │  mongo3  │        │
+│  │ PRIMARY  │   │SECONDARY │   │SECONDARY │        │
+│  │  :27017  │   │  :27018  │   │  :27019  │        │
+│  └────┬─────┘   └──────────┘   └──────────┘        │
+│       │                                             │
+│   All writes go here → replicated automatically    │
+└─────────────────────────────────────────────────────┘
 ```
 
-### Hot Redundancy & Automatic Failover
-- If PRIMARY goes down → secondaries elect a new PRIMARY in **< 10 seconds**
-- **2-of-3 quorum**: cluster stays writable even with one node failure
-- FastAPI `db_manager` automatically reconnects; zero application downtime
-- **Fallback chain**: `replica` → `standalone` (single node) if all replicas fail
+**How hot recovery works:**
+1. All writes go to the **Primary** (`mongo1`)
+2. Both Secondaries continuously replicate the oplog in real time
+3. If the Primary crashes → MongoDB triggers an **automatic election** in ~10 seconds
+4. One Secondary is promoted to Primary — **zero data loss, zero manual intervention**
+5. Backend `database.py` has a fallback to standalone mode in case the full replica set is unavailable locally
+
+**Why this matters:** Standard e-commerce or web apps use a single MongoDB instance. If it crashes, everything is down. This replica set guarantees high availability — exactly the kind of fault tolerance required in a defence environment.
 
 ---
 
-## 🚀 Quick Start (Docker — Recommended)
+### 3. Docker Orchestration
 
-> One command starts everything: 3 MongoDB nodes + FastAPI backend + React frontend.
+All 5 services run as isolated containers, managed by **Docker Compose**:
+
+```
+docker-compose.yml
+├── mongo1, mongo2, mongo3   ← Replica Set nodes
+├── backend                  ← FastAPI (Uvicorn) on port 8000
+└── frontend                 ← React (Nginx) on port 80
+```
+
+- `scripts/mongo-init-replica.js` — auto-inits the replica set on first boot with retry logic
+- `backend/Dockerfile` — Python 3.11 slim, uvicorn in production mode
+- `frontend/Dockerfile` — Multi-stage build: Node.js build → Nginx serve
+- `frontend/nginx.conf` — SPA routing + `/api` proxy to backend (no CORS issues)
+
+---
+
+## 🚀 Quick Start (Local)
 
 ```bash
-# 1. Clone
-git clone https://github.com/hemasaivattikuti25/drdo_p1.git
+git clone <repo-url>
 cd drdo_p1
 
-# 2. Start full stack
+# Start everything (replica set + backend + frontend)
 docker compose up --build
 
-# Wait ~45 seconds for replica set initialization, then:
-#   Frontend:  http://localhost:3000
-#   API Docs:  http://localhost:8000/docs
-#   DB Status: http://localhost:8000/api/v1/admin/db-status  (admin login required)
+# Wait ~45 seconds for replica set election to complete, then:
+open http://localhost:3000        # UI (dummy showcase)
+open http://localhost:8000/docs   # FastAPI Swagger docs
 ```
 
-To stop:
+### Seed dummy data (optional)
 ```bash
-docker compose down        # stop containers
-docker compose down -v     # stop + delete DB volumes
-```
-
-### Seed Dummy Data (auto-runs on first boot via seeder in Docker)
-```bash
-# Manual seed:
 cd backend
-python seeder.py              # seed 12 dummy equipment items + admin user
-
-# Admin credentials (dummy — change in production):
-#   Email:    admin@drdl.drdo.gov.in
-#   Password: Drdo@2025
+python3 seeder.py          # inserts 12 DRDO lab equipment items
+python3 seeder.py --destroy  # wipe + re-seed
 ```
 
----
-
-## 🔌 API Reference
-
-### Authentication
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/register` | Register new user |
-| `POST` | `/api/v1/login` | Login, returns JWT |
-| `GET`  | `/api/v1/logout` | Logout |
-| `GET`  | `/api/v1/myprofile` | Get authenticated user |
-| `PUT`  | `/api/v1/update` | Update profile |
-| `PUT`  | `/api/v1/password/change` | Change password |
-
-### Equipment (Products)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET`  | `/api/v1/products` | List equipment (paginated, filterable) |
-| `GET`  | `/api/v1/product/:id` | Get equipment details |
-| `POST` | `/api/v1/admin/product/new` | Register new equipment (admin) |
-| `PUT`  | `/api/v1/admin/product/:id` | Update equipment (admin) |
-| `DELETE` | `/api/v1/admin/product/:id` | Remove from registry (admin) |
-
-### Requisitions (Orders)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/v1/order/new` | Submit new requisition |
-| `GET`  | `/api/v1/myorders` | List my requisitions |
-| `GET`  | `/api/v1/admin/orders` | All requisitions (admin) |
-| `PUT`  | `/api/v1/admin/order/:id` | Update requisition status |
-
-### Admin / Database Control ⭐
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET`  | `/api/v1/admin/dashboard` | Stats: equipment, requisitions, users, value |
-| `GET`  | `/api/v1/admin/db-status` | **Replica Set status** — PRIMARY/SECONDARY, uptime |
-| `POST` | `/api/v1/admin/switch-db` | **Manual failover** — switch replica ↔ standalone |
-| `GET`  | `/api/v1/admin/health` | DB ping + CPU temperature |
-
----
-
-## ⚙️ Distributed Database — Key Features (Primary Contribution)
-
-### MongoDB Replica Set (3 nodes)
-```
-mongo1 → PRIMARY   (priority 3)  — handles all writes
-mongo2 → SECONDARY (priority 2)  — hot standby, ready to elect
-mongo3 → SECONDARY (priority 1)  — additional redundancy
-```
-
-### Smart DB Manager (`backend/config/database.py`)
-```python
-# Tries replica set first; automatically falls back to standalone
-await db_manager.connect("replica")     # preferred
-await db_manager.connect("standalone")  # automatic fallback
-
-# Manual switch via API
-POST /api/v1/admin/switch-db  {"mode": "standalone"}
-POST /api/v1/admin/switch-db  {"mode": "replica"}
-```
-
-### Health Monitor (`backend/utils/health_monitor.py`)
-- Background asyncio task — runs from startup
-- Pings DB every **30 seconds**, reads uptime + host
-- Reads **CPU temperature** (Linux thermal zone)
-- If temp > **80°C**: auto-switch to standalone (reduces DB load)
-- If replica ping fails: auto-reconnect to standalone
-
----
-
-## 🧪 Failover Demo
-
-```bash
-# 1. Check replica status (need admin JWT)
-curl -H "Authorization: Bearer <token>" http://localhost:8000/api/v1/admin/db-status
-
-# 2. Stop the primary node (simulate hardware failure)
-docker stop dams-mongo1
-
-# 3. Watch election — mongo2 becomes PRIMARY in ~10s
-docker logs dams-mongo2 --tail 20
-
-# 4. App keeps running (db_manager auto-reconnects)
-# 5. Restart old primary — it rejoins as SECONDARY
-docker start dams-mongo1
-```
-
----
-
-## 🛠️ Manual / Development Setup
-
-```bash
-# Backend
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-
-# Frontend
-cd frontend
-npm install
-npm start   # → http://localhost:3000
-
-# Local replica set (3 nodes)
-./scripts/start-local-replica.sh
-```
+**Admin login:** `admin@drdl.drdo.gov.in` / `Drdo@2025`
 
 ---
 
@@ -218,46 +107,55 @@ npm start   # → http://localhost:3000
 
 ```
 drdo_p1/
-├── backend/                    FastAPI Python backend  ← PRIMARY WORK
+├── backend/                   ← FastAPI (MY WORK)
+│   ├── main.py                ← App entrypoint, rate limiting, routers
 │   ├── config/
-│   │   └── database.py         ★ Distributed DB Manager (failover logic)
+│   │   └── database.py        ← Replica set connection + failover logic
+│   ├── models/
+│   │   └── product.py         ← Pydantic model with field validators
 │   ├── routers/
-│   │   ├── product.py          Equipment CRUD + search + reviews
-│   │   ├── auth.py             JWT auth, password reset
-│   │   ├── order.py            Requisition lifecycle
-│   │   ├── payment.py          Payment reference handler
-│   │   └── admin.py            ★ Dashboard, DB status, manual failover
-│   ├── utils/
-│   │   ├── health_monitor.py   ★ Background health check + auto-failover
-│   │   ├── jwt.py              JWT token creation/validation
-│   │   └── email.py            SMTP email (password reset)
-│   ├── seeder.py               ★ Dummy equipment data loader (12 items)
-│   └── Dockerfile
-├── frontend/                   React SPA (prototype UI — demo layer)
-│   ├── src/
-│   │   └── components/
-│   │       ├── admin/          Director's Panel, Equipment Registry
-│   │       ├── cart/           Asset Request Form
-│   │       └── layouts/        DRDO DAMS Header + Footer
-│   ├── nginx.conf              Reverse proxy → backend
-│   └── Dockerfile
+│   │   ├── product.py         ← CRUD + search + pagination
+│   │   ├── user.py            ← Auth, JWT, profile
+│   │   ├── order.py           ← Requisition management
+│   │   ├── admin.py           ← Dashboard, DB status, manual failover
+│   │   └── analytics.py       ← Advanced aggregation endpoints
+│   ├── seeder.py              ← Database seeder with 12 items
+│   └── requirements.txt
+│
 ├── scripts/
-│   ├── mongo-init-replica.js   ★ Docker replica set initialiser
-│   └── start-local-replica.sh  Local 3-node startup
-└── docker-compose.yml          ★ Full stack: 3×MongoDB + API + Frontend
+│   └── mongo-init-replica.js  ← Auto replica set init (MY WORK)
+│
+├── docker-compose.yml         ← Full orchestration (MY WORK)
+├── frontend/                  ← React (dummy showcase wrapper)
+│   ├── Dockerfile
+│   └── nginx.conf
 ```
 
 ---
 
-## 🏛️ DRDO Context
+## ⚠️ Important Note
+The **frontend is a minimal placeholder** to provide a visual wrapper for the system. Likewise the **database content (12 equipment items) is dummy data** for demonstration.
 
-Developed during a 3-month internship at **DRDL (Defence Research & Development Laboratory)**, Kanchanbagh, Hyderabad — DRDO, Ministry of Defence, Govt. of India.
+The **actual technical contribution** of this internship project is:
+- The **FastAPI async backend** with rate limiting, JWT auth, Pydantic validation
+- The **MongoDB 3-node replica set** with automatic leader election and hot failover
+- The **Docker Compose orchestration** of all services
+- The **analytics engine** with MongoDB aggregation pipelines
 
-| Attribute | Detail |
-|-----------|--------|
-| Lab | DRDL, Hyderabad (DRDO) |
-| Duration | Aug–Nov 2025 |
-| Supervisor | Shri. Srijan Tripathi, Scientist 'E' |
-| Intern | Hemasai Vattikuti, VIT-AP (B.Tech CSE) |
-| Stack | FastAPI · MongoDB Replica Set · React · Docker |
-| **Core Contribution** | **Distributed DB + FastAPI Backend** |
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | FastAPI 0.111, Python 3.11, Uvicorn |
+| Database | MongoDB 6.0 (3-node Replica Set, `rs0`) |
+| Auth | python-jose (JWT), bcrypt (password hashing) |
+| Async DB Driver | Motor 3.x |
+| Rate Limiting | slowapi |
+| Containerisation | Docker, Docker Compose |
+| Frontend | React 18 (Nginx-served, placeholder) |
+
+---
+
+*Built at DRDL Hyderabad, 2025 · Hemasai Vattikuti · v3.0*
