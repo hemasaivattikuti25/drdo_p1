@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, status, Response, Request, Body
+from fastapi import APIRouter, HTTPException, Depends, Response, Request, Body
 from config.database import db_manager
 from models.user import User
 from utils.jwt import create_access_token

@@ -2,7 +2,6 @@ from fastapi import APIRouter, HTTPException, Depends
 from config.database import db_manager
 from dependencies import get_current_user
 import platform
-import asyncio
 
 router = APIRouter()
 

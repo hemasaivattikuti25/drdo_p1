@@ -3,7 +3,6 @@ from config.database import db_manager
 from models.product import Product
 from typing import List, Optional
 from bson import ObjectId
-import math
 from dependencies import get_current_user
 
 router = APIRouter()
